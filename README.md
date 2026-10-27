@@ -17,25 +17,7 @@ remain scalar FP32; upstream generation of this supported form is unestablished.
 
 ## From scheduled IR to GPU execution
 
-```mermaid
-flowchart TD
-    IR["Emmy Kernel IR JSON<br/>Typed operations and supplied schedule"]
-    META["meta.json<br/>Launch geometry and buffer ABI"]
-    subgraph HOST["This repository: Python on the host"]
-        LOAD["Load typed IR and match metadata"]
-        EMIT["Check supported semantics<br/>Lower statements and optimize PTX"]
-        PTX["PTX text on stdout"]
-        LOAD --> EMIT --> PTX
-    end
-    IR --> LOAD
-    META --> LOAD
-    subgraph RUN["Separate assembly and execution"]
-        ASM["NVIDIA assembler<br/>PTX to native GPU code"]
-        GPU["Runner supplies buffers and launches kernel<br/>Hosted qualification: RTX 5090 / sm_120"]
-        ASM --> GPU
-    end
-    PTX --> ASM
-```
+![Compilation pipeline: scheduled IR and metadata enter the Python backend; emitted PTX is assembled and executed separately.](docs/diagrams/compilation-pipeline.svg)
 
 The Python compiler builds a program; it does not execute the tensor operations.
 It retains Emmy's supplied schedule rather than choosing a new tiling. Assembly
@@ -67,18 +49,7 @@ Follow `compile.py` → `ptxgen/compiler.py:compile_file` →
 `ptxgen/emitter.py:Emitter.compile`. The last function shows the complete flow:
 validate the launch, bind parameters, map threads, lower the body, assemble PTX.
 
-```mermaid
-flowchart TD
-    CLI["compile.py<br/>CLI policies, stdout and diagnostics"]
-    API["ptxgen/compiler.py<br/>Typed loader, metadata and resolved policies"]
-    E["Emitter<br/>Owns registers, bindings, scope and instruction list<br/>Walks the statement tree"]
-    CLI --> API --> E
-    E -->|calls| L["launch.py<br/>Validate launch, bind ABI, map threads<br/>Finish and render PTX"]
-    E -->|consults| A["ir_analysis.py / participation.py<br/>Scope, alignment and participation facts"]
-    E -->|delegates| M["scalars.py / float32_math.py / wide_math.py<br/>Typed arithmetic and numerical formulas"]
-    E -->|delegates| F["fragments.py<br/>Explicit tensor-fragment lowering"]
-    L -->|render applies| P["PTX transformations<br/>FMA policy, index reuse, shared-load grouping<br/>Bounded unrolling, rebasing, constant division"]
-```
+![Compiler architecture: CLI and loader configure one emitter, which calls launch, analysis, typed math and tensor-fragment helpers.](docs/diagrams/compiler-architecture.svg)
 
 Arrows show the main calls and responsibilities, not a complete import graph.
 Helpers operate on the same emitter or return analysis facts; the boxes are not
