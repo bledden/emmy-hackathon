@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.ptx
+*.cubin
+evidence/
+
+# Keep only the bundled historical PTX records.
+!validation_records/**/payloads/**/*.ptx

@@ -1,0 +1,43 @@
+{
+  "inputs": [],
+  "outputs": [],
+  "nodes": {
+    "source": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "source",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "result": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='cell', extent=Dim(32), window=None),), body=(Smem(name='stage', extents=(128,), dtype='f32', align=16), CpAsyncCopy(smem='stage', smem_index=(BinaryExpr(op='*', left=Var(name='cell'), right=Literal(value=4, dtype='int')),), src='source', src_index=(BinaryExpr(op='*', left=Var(name='cell'), right=Literal(value=4, dtype='int')),), nbytes=16, swizzle='NONE', lane_index=None, lane_rows=0), CpAsyncCommit(), CpAsyncWait(group=0), Sync(barrier_id=0, count=None, warp=False), Load(names=('v0', 'v1', 'v2', 'v3'), input='stage', index=(BinaryExpr(op='*', left=Var(name='cell'), right=Literal(value=4, dtype='int')),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Write(output='result', index=(BinaryExpr(op='*', left=Var(name='cell'), right=Literal(value=4, dtype='int')),), values=('v0', 'v1', 'v2', 'v3'), value_dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "async_copy",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "source"
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

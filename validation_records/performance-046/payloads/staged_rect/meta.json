@@ -1,0 +1,66 @@
+{
+  "id": "matmul_staged_rect",
+  "code": "torch.randn(512, 512) @ torch.randn(512, 512)",
+  "rtol": 0.001,
+  "atol": 0.001,
+  "graph_inputs": [
+    "x0",
+    "x1"
+  ],
+  "graph_outputs": [
+    "matmul"
+  ],
+  "kernels": [
+    {
+      "node": "matmul",
+      "entry": "variant_matmul_staged_rect",
+      "arg_order": [
+        "x1",
+        "x0",
+        "matmul"
+      ],
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "block": [
+        512,
+        1,
+        1
+      ],
+      "smem_bytes": 73728,
+      "zero_outputs": [],
+      "args": [
+        {
+          "name": "x1",
+          "dtype": "f32",
+          "shape": [
+            512,
+            192
+          ],
+          "seed": 74
+        },
+        {
+          "name": "x0",
+          "dtype": "f32",
+          "shape": [
+            96,
+            512
+          ],
+          "seed": 73
+        },
+        {
+          "name": "matmul",
+          "dtype": "f32",
+          "shape": [
+            96,
+            192
+          ],
+          "output": true
+        }
+      ],
+      "final": true
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+OPUS REVIEW — RECEIPTS OF APPROVED QUALIFICATION 055, 2026-10-24
+Request: reviews/opus-judging-055-live-request.txt
+Evidence: evidence/opus_judging_055_live/ (receipt_probe.py/.json/.out.txt)
+Reviewer: Claude Opus. Offline only: I read the saved files, under the socket guard. I made no
+hosted, network or GPU call, and I edited or deleted no receipt, consumed record or frozen file.
+My decoder is my own code. It does not import run_typed.py, typed_io.py or Codex's
+check_receipts.py.
+
+VERDICT
+  CONFIRMED. The executed batch is exactly the batch I reviewed in 055, and all 38 receipts
+  are consistent.
+  - All 19 cases pass at their original tolerances: 11,262 values.
+  - 18 cases are bit-identical to their references, including all 3 MMA, both copy-tail and all
+    13 synchronization cases.
+  - m_rectangular passes the 1e-3 tolerance with a max absolute error of 5.7220458984375e-6.
+    4,364 of its 6,144 elements differ from the float64-derived reference in the low bits, which
+    is expected for FP32 accumulation.
+  This agrees with Codex's README and RESULT.json.
+
+WHAT I CHECKED
+  Approval and identity.
+  - approval.json records "I approve" at 2026-10-25T02:17:25Z. It names both exact manifest
+    hashes, the 38-request maximum and the reviewed runner hash c99e7e56….
+  - The earliest receipt file time is 02:18:13Z, after the approval.
+  - The approved-manifest.json copies are byte-identical to the frozen reviewed manifests
+    (7d27e615…, e54081be…). Every frozen payload file still matches.
+  - Tools, archive and source are unchanged: the manifest source equals the 264f72a archive,
+    and compiler-judging is clean at 264f72a.
+  - receipt-files.json lists all 61 run-folder files, with true hashes.
+  Consumption.
+  - Both consumed records exist in the pinned evidence/hosted-approval-state.
+  - Each names its own manifest hash and output folder. Their hashes match RESULT.json.
+  Requests: exactly 12 and 26 files, numbered without gaps, alternating /compile and /run in
+  manifest order.
+  - Every compile body is the frozen PTX.
+  - Every run body equals the payload I rebuilt from meta.json and inputs.npz, plus the
+    cubin_id returned by the preceding compile.
+  Responses.
+  - All are HTTP 200 and ok:true, with no NaN/Infinity tokens.
+  - Every compile reports arch sm_120 and exactly one entry point, the expected one.
+  - The run echoes (grid, block, smem_bytes, iters) are exact JSON integers equal to the
+    payload, and the entries match.
+  - Output names, dtype, shape, length and truncated:false are all exact.
+  Values.
+  - Every returned token is exactly representable in its declared f16/f32 type.
+  - Signed zeros match everywhere. The 91 zeros in mma_padded (the 88 halo elements plus 3 zero
+    results) are +0.0. The async reference-zero tail elements are +0.0. sync_12's 256 values
+    are +0.0.
+  - The runner's saved .npy files equal my decode bit for bit.
+  Summaries: both say passed, with attempted = cap = 12 and 26, no error and the right case
+  order.
+
+SCOPE AND LIMITS (preserve these in the release packet)
+  - These are 19 new hardware witnesses: 3 tensor examples, 3 copy-width cases and 13
+    synchronization witnesses. Together with the 5 outputs measured in 046, every one of the 21
+    outputs that 83348ec changed now has a hardware result. This does NOT put all 431 offline
+    outputs or all 9 examples on hardware: the 6 scalar and copy examples were not run.
+  - MMA: lane mapping and accumulation on exact small-integer FP16 inputs only. Not general
+    FP16 rounding, subnormal or NaN behaviour, or tensor throughput.
+  - Synchronization and copy cases: one launch each at the frozen configuration. A pass shows
+    those outputs on that run, not race freedom or behaviour under other schedules.
+  - sync_12: the all-zero reference cannot show on hardware that stores happened. Only my
+    offline model showed all 256 stores.
+  - The zeroed halo and tail values rely on the service's documented zeroed output allocation.
+  - The service reports arch sm_120. The protocol does not otherwise attest the GPU model.
+  - The one-iteration medians (about 15–33 µs, recorded in receipt_probe.json) are not
+    benchmarks and support no performance claim.
+  - Both allowances are consumed. No further hosted request is authorized. Never delete the
+    consumed records.
+  - Adoption, the final release packet and Fable's encompassing review remain pending.
+    Release 8f7f887 is unchanged.

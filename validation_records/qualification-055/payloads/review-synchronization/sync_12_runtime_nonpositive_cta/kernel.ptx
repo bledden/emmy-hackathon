@@ -1,0 +1,79 @@
+.version 8.0
+.target sm_89
+.address_size 64
+
+.visible .entry k_add_pointwise(
+    .param .u64 param_0,
+    .param .u64 param_1,
+    .param .u64 param_2
+)
+{
+    .reg .u64 %rd<12>;
+    .reg .s32 %r<21>;
+    .reg .f32 %f<3>;
+    .reg .pred %p<4>;
+    .reg .s64 %rl<3>;
+    .shared .align 16 .b8 sm_s[512];
+    ld.param.u64 %rd0, [param_0];
+    cvta.to.global.u64 %rd0, %rd0;
+    ld.param.u64 %rd1, [param_1];
+    cvta.to.global.u64 %rd1, %rd1;
+    ld.param.u64 %rd2, [param_2];
+    cvta.to.global.u64 %rd2, %rd2;
+    mov.u32 %r0, %tid.x;
+    mov.u32 %r1, %ctaid.x;
+    mov.u32 %r2, %ntid.x;
+    mul.lo.s32 %r3, %r1, %r2;
+    add.s32 %r4, %r3, %r0;
+    and.b32 %r5, %r0, 31;
+    shr.u32 %r6, %r0, 5;
+    rem.s32 %r7, %r4, 256;
+    mov.s32 %r8, %r7;
+    mov.u64 %rd3, sm_s;
+    mul.wide.s32 %rd4, %r8, 4;
+    add.u64 %rd5, %rd0, %rd4;
+    ld.global.f32 %f0, [%rd5];
+    mov.f32 %f1, 0f00000000;
+    div.s32 %r9, %r8, 128;
+    sub.s32 %r10, %r9, 1;
+    mul.lo.s32 %r12, %r6, 32;
+    add.s32 %r13, %r12, %r5;
+    add.s32 %r14, %r13, 1;
+    rem.s32 %r15, %r14, 128;
+    xor.b32 %r16, %r14, 128;
+    setp.lt.s32 %p0, %r16, 0;
+    setp.ne.s32 %p1, %r15, 0;
+    and.pred %p2, %p0, %p1;
+    selp.s32 %r17, 128, 0, %p2;
+    add.s32 %r18, %r15, %r17;
+    mov.s32 %r11, 0;
+    L2:
+    setp.le.s32 %p3, %r10, 0;
+    @%p3 bra L3;
+    setp.ge.s32 %p3, %r11, 7;
+    @%p3 bra L3;
+    mul.lo.s32 %r19, %r6, 32;
+    add.s32 %r20, %r19, %r5;
+    mul.wide.s32 %rd6, %r20, 4;
+    add.u64 %rd7, %rd3, %rd6;
+    st.shared.f32 [%rd7], %f0;
+    bar.sync 0;
+    mul.wide.s32 %rd8, %r18, 4;
+    add.u64 %rd9, %rd3, %rd8;
+    ld.shared.f32 %f2, [%rd9];
+    add.rn.f32 %f1, %f1, %f2;
+    bar.sync 0;
+    cvt.s64.s32 %rl0, %r11;
+    cvt.s64.s32 %rl1, %r10;
+    add.s64 %rl2, %rl0, %rl1;
+    setp.gt.s64 %p3, %rl2, 2147483647;
+    @%p3 bra L3;
+    add.s32 %r11, %r11, %r10;
+    bra L2;
+    L3:
+    mul.wide.s32 %rd10, %r8, 4;
+    add.u64 %rd11, %rd2, %rd10;
+    st.global.f32 [%rd11], %f1;
+    L1:
+    ret;
+}

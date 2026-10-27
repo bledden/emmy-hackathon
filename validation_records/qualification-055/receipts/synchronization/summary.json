@@ -1,0 +1,165 @@
+{
+  "state": "passed",
+  "candidate": "264f72abee0e9d26112585fefbb75c0fa843b228",
+  "requests_attempted": 26,
+  "maximum_http_requests": 26,
+  "cases": [
+    {
+      "case": "sync_00_repeated_phases",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_01_group_loop_counts",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_02_one_iteration",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_03_repeated_reuse",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_04_nested_reuse",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_05_one_iteration",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_06_repeated_reuse",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_07_nested_reuse",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_08_cta_runtime_exchange",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_09_warp_runtime_exchange",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_10_static_terminal_exchange",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_11_runtime_terminal_exchange",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "sync_12_runtime_nonpositive_cta",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,81 @@
+{
+  "state": "passed",
+  "candidate": "264f72abee0e9d26112585fefbb75c0fa843b228",
+  "requests_attempted": 12,
+  "maximum_http_requests": 12,
+  "cases": [
+    {
+      "case": "mma_tile",
+      "pass_": true,
+      "checks": {
+        "result": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "mma_padded",
+      "pass_": true,
+      "checks": {
+        "result": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "mma_k32",
+      "pass_": true,
+      "checks": {
+        "result": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "m_rectangular",
+      "pass_": true,
+      "checks": {
+        "matmul": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "async_lane_f16",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    },
+    {
+      "case": "async_lane_f32",
+      "pass_": true,
+      "checks": {
+        "add": {
+          "finite": true,
+          "values": true,
+          "zero_sign": true
+        }
+      },
+      "arch": "sm_120"
+    }
+  ],
+  "error": null
+}

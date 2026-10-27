@@ -1,0 +1,58 @@
+{
+  "inputs": [],
+  "outputs": [],
+  "nodes": {
+    "left": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "left",
+          "shape": [
+            32
+          ],
+          "dtype": "i64"
+        }
+      ]
+    },
+    "right": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "right",
+          "shape": [
+            32
+          ],
+          "dtype": "i64"
+        }
+      ]
+    },
+    "result": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='cell', extent=Dim(32), window=None),), body=(Load(names=('a',), input='left', index=(Var(name='cell'),), dtype=DataType(name='i64', np=dtype('int64'), nbytes=8)), Load(names=('b',), input='right', index=(Var(name='cell'),), dtype=DataType(name='i64', np=dtype('int64'), nbytes=8)), Assign(name='sum', op=ElementwiseImpl('add'), args=('a', 'b'), dtype=DataType(name='i64', np=dtype('int64'), nbytes=8)), Write(output='result', index=(Var(name='cell'),), values=('sum',), value_dtype=DataType(name='i64', np=dtype('int64'), nbytes=8), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "typed_add",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "left",
+        "right"
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "shape": [
+            32
+          ],
+          "dtype": "i64"
+        }
+      ]
+    }
+  }
+}

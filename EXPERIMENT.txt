@@ -1,0 +1,109 @@
+CURRENT STATUS — compact backend adopted, 2026-10-25
+
+Blake approved adoption after Fable 072 and Opus 073 closed all required findings.
+Backend modules remain byte-identical to 34129e9; executable files match 2c5d165.
+CLI defaults are constant division=1, unroll=1, shared loads=compact.
+Python API defaults stay off. Reviewed batches 064/068/069/071 cover 15 corpus
+kernels and nine examples, not all changed corpus outputs. All passed within
+their original tolerances. No hosted approval remains. See VALIDATION.md for
+current results and their limits.
+
+Everything below records the investigation before those hardware results.
+
+Backend performance investigation 059 — NOT a release candidate
+
+Base: reviewed 3eb73a6. Both new switches default OFF in CLI and API:
+  EMMY_PTX_CONSTANT_DIVISION=1 / constant_division=True
+  EMMY_PTX_UNROLL=1 / unroll_loops=True
+
+Constant division replaces unpredicated div.s32/rem.s32 by positive literal
+divisors with exact shift or multiply-high arithmetic. Existing floor correction,
+FMA policy, and integer-reuse selection run first and retain their decisions.
+The new module includes the arithmetic argument; tests compare signed extremes,
+divisor boundaries and random values against independent Python arithmetic.
+
+Unrolling handles only explicitly annotated, bounded, straight-line Loop bodies.
+It preserves instruction order, carried registers and terminal induction values.
+Nested control flow, synchronization, unknown instructions and axis writes decline.
+It is an experiment in exposing constant offsets, not a demonstrated speedup.
+
+No new GPU executions. Local CUDA 12.9 assembly of five cases shows reduced
+integer overhead for constant division, but attention increases from 44 to 64
+registers. Full unrolling alone leaves scalar loads and excessive address work.
+Neither experiment is adopted or recommended as a new default yet.
+
+Investigation060 adds EMMY_PTX_SHARED_LOADS (API shared_loads):
+  off: default, original addressing and loads.
+  address: bounds-checked affine shared addresses and pointer reuse.
+  vector: affine addresses, aligned v2/v4 shared loads; with unroll enabled,
+          iteration-local load temporaries enable cross-iteration load grouping.
+  compact: vector plus reuse of proved base pointers and constant offsets.
+
+All060 modes are experimental. For the five local controls, vector+unroll+constant
+division retains a40-register m01 variant, while compact uses48 registers and
+fewer address instructions. Both are kept for a future reviewed comparison.
+Local tile code: compact418slots/256FFMA/96shared loads versus nvcc406/256/96;
+no GPU result is available for these variants. Evidence: backend_parallelism_060.
+
+Evidence and reproducible scripts: ../evidence/backend_gap_059/
+
+Integrated next-work plan — updated October 25 at Blake's request
+
+The objective is to close the same-schedule nvcc gap, not merely reduce static
+instruction counts. Evaluate useful parallel execution throughout these steps:
+
+1. Establish the hot-loop comparison and simplify shared addresses.
+   Record block/warp work distribution, independent accumulator chains, address
+   dependencies, load-to-use dependencies and synchronization points. Separate
+   limits imposed by the supplied schedule from overhead introduced by us.
+   Canonicalize shared addresses with wrap/alignment proofs and use launch/IR
+   range facts to simplify constant division further where safe. Check whether
+   changes shorten dependency chains as well as reducing instruction counts.
+
+2. Combine aligned shared loads and expose independent work.
+   Prove adjacency, alignment and memory effects before combining accesses.
+   Evaluate load placement and independent loads feeding different accumulators;
+   preserve each accumulator's floating-point operation order. No speculative
+   out-of-bounds loads, unsafe motion across stores/barriers/atomics, or silent
+   reassociation to manufacture additional accumulator chains.
+
+3. Evaluate bounded unrolling together with overlap and resource costs.
+   Compare compact loop bodies under partial/full expansion, including whether
+   loads can overlap useful arithmetic and the existing cp.async pipeline can
+   overlap copies with computation. Inspect live ranges, registers, spills,
+   shared-memory use and residency limits. Treat static dependency/occupancy
+   analysis as a hypothesis; it does not establish actual overlap or stall causes.
+   Investigate attention's 44-to-64-register increase before selecting a policy.
+
+4. Use the controls to decide which changes deserve measurement.
+   Keep matmul, rectangular, small-K, split-K and attention cases in the analysis.
+   Test alignment, tails, aliasing, mutable bindings, dependency preservation and
+   synchronization boundaries. Compare emitted machine code with same-schedule
+   nvcc, not only with our previous output. Preserve failed experiments and use
+   general eligibility rules rather than exceptions fitted to kernel names.
+
+5. Propose one bounded, independently reviewed ablation batch when justified.
+   Separate each pass's effect and their interactions; compare with the current
+   reviewed baseline and nvcc under matched inputs, precision and launch settings.
+   GPU profiling, if available and separately authorized, can distinguish memory,
+   dependency, synchronization and occupancy explanations. Timings alone must not
+   be presented as proof of a particular stall mechanism. Hosted approvals remain
+   consumed; this plan authorizes no requests.
+
+Scope boundary and later opportunities
+
+Grid, block and allocated shared memory come from the evaluator's metadata. The
+nine-block staged case is an explicit grid-parallelism limit; changing the grid
+is not an available backend optimization. Within that contract, examine useful
+thread/warp work distribution when ownership and communication can be proved.
+General retiling, new split-K schedules, warp specialization and TMA integration
+remain later investigations, gated by evidence and ABI/synchronization feasibility.
+The existing split-K fixture and async-copy support do not establish that these
+broader optimizations have been explored or tuned.
+
+Success means preserved semantics plus measured performance across the relevant
+controls. More threads, higher occupancy, wider loads, fewer instructions or more
+unrolling are candidate mechanisms, not success criteria in isolation.
+
+This current plan extends the historical next steps in evidence/backend_gap_059;
+the hashed evidence and reviewed submission remain unchanged.

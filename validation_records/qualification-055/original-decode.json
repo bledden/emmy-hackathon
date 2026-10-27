@@ -1,0 +1,370 @@
+{
+ "tools_unchanged": true,
+ "archive_unchanged": true,
+ "approval_record": {
+  "user_message": "I approve",
+  "recorded_at_utc": "2026-10-25T02:17:25.537628+00:00",
+  "names_both_hashes": true,
+  "max_requests": 38,
+  "runner": true
+ },
+ "groups": {
+  "core": {
+   "frozen_manifest_hash_ok": true,
+   "approved_copy_identical": true,
+   "frozen_payload_files_ok": true,
+   "manifest_source_is_archive": true,
+   "manifest_tools_ok": true,
+   "state_dir_pinned": true,
+   "consumed_record": {
+    "exists": true,
+    "content_ok": true,
+    "sha_matches_result": true
+   },
+   "request_files": 12,
+   "request_numbering_exact": true,
+   "runner_summary": {
+    "state": "passed",
+    "attempted": 12,
+    "cap": 12,
+    "error": null
+   },
+   "summary_consistent": true,
+   "saved_npy_equal_my_decode": true,
+   "problems": [],
+   "cases": [
+    {
+     "case": "mma_tile",
+     "rtol": 0.0,
+     "atol": 0.0,
+     "checks": {
+      "result": {
+       "zero_signs": true,
+       "zeros": 2,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "mma_padded",
+     "rtol": 0.0,
+     "atol": 0.0,
+     "checks": {
+      "result": {
+       "zero_signs": true,
+       "zeros": 91,
+       "bitwise_equal": true,
+       "values": true,
+       "plus_zero_elements": 91
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "mma_k32",
+     "rtol": 0.0,
+     "atol": 0.0,
+     "checks": {
+      "result": {
+       "zero_signs": true,
+       "zeros": 2,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "m_rectangular",
+     "rtol": 0.001,
+     "atol": 0.001,
+     "checks": {
+      "matmul": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": false,
+       "values": true,
+       "max_abs_error": 5.7220458984375e-06,
+       "mismatched_elements": 4364
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "async_lane_f16",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 22,
+       "bitwise_equal": true,
+       "values": true,
+       "reference_zero_elements_returned_plus_zero": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "async_lane_f32",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 18,
+       "bitwise_equal": true,
+       "values": true,
+       "reference_zero_elements_returned_plus_zero": true
+      }
+     },
+     "pass_": true
+    }
+   ],
+   "pass": true
+  },
+  "synchronization": {
+   "frozen_manifest_hash_ok": true,
+   "approved_copy_identical": true,
+   "frozen_payload_files_ok": true,
+   "manifest_source_is_archive": true,
+   "manifest_tools_ok": true,
+   "state_dir_pinned": true,
+   "consumed_record": {
+    "exists": true,
+    "content_ok": true,
+    "sha_matches_result": true
+   },
+   "request_files": 26,
+   "request_numbering_exact": true,
+   "runner_summary": {
+    "state": "passed",
+    "attempted": 26,
+    "cap": 26,
+    "error": null
+   },
+   "summary_consistent": true,
+   "saved_npy_equal_my_decode": true,
+   "problems": [],
+   "cases": [
+    {
+     "case": "sync_00_repeated_phases",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_01_group_loop_counts",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_02_one_iteration",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_03_repeated_reuse",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_04_nested_reuse",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_05_one_iteration",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_06_repeated_reuse",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_07_nested_reuse",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 0,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_08_cta_runtime_exchange",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 1,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_09_warp_runtime_exchange",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 1,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_10_static_terminal_exchange",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 1,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_11_runtime_terminal_exchange",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 1,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    },
+    {
+     "case": "sync_12_runtime_nonpositive_cta",
+     "rtol": 0,
+     "atol": 0,
+     "checks": {
+      "add": {
+       "zero_signs": true,
+       "zeros": 256,
+       "bitwise_equal": true,
+       "values": true
+      }
+     },
+     "pass_": true
+    }
+   ],
+   "pass": true
+  }
+ },
+ "receipt_files_json": {
+  "entries": 61,
+  "run_folder_files": 61,
+  "all_hashes_true": true,
+  "covers_all_files": true
+ },
+ "values_decoded": 11262,
+ "exact_cases": 18,
+ "approval_before_first_receipt_mtime": true,
+ "first_receipt_mtime_utc": "2026-10-25T02:18:13.035268+00:00",
+ "one_iteration_medians_us_not_benchmarks": {
+  "mma_tile": 21.024,
+  "mma_padded": 20.768,
+  "mma_k32": 20.032,
+  "m_rectangular": 15.232,
+  "async_lane_f16": 33.344,
+  "async_lane_f32": 20.704,
+  "sync_00_repeated_phases": 20.576,
+  "sync_01_group_loop_counts": 20.448,
+  "sync_02_one_iteration": 20.576,
+  "sync_03_repeated_reuse": 20.256,
+  "sync_04_nested_reuse": 20.48,
+  "sync_05_one_iteration": 20.576,
+  "sync_06_repeated_reuse": 20.608,
+  "sync_07_nested_reuse": 20.96,
+  "sync_08_cta_runtime_exchange": 20.928,
+  "sync_09_warp_runtime_exchange": 20.416,
+  "sync_10_static_terminal_exchange": 20.16,
+  "sync_11_runtime_terminal_exchange": 20.704,
+  "sync_12_runtime_nonpositive_cta": 21.28
+ },
+ "all_pass": true
+}

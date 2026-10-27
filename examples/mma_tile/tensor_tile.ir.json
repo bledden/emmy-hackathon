@@ -1,0 +1,61 @@
+{
+  "inputs": [],
+  "outputs": [],
+  "nodes": {
+    "left": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "left",
+          "shape": [
+            16,
+            16
+          ],
+          "dtype": "f16"
+        }
+      ]
+    },
+    "right": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "right",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "f16"
+        }
+      ]
+    },
+    "result": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='thread_cell', extent=Dim(32), window=None),), body=(RegFragment(name='fa', role='a', shape=(16, 8, 16), dtype=DataType(name='f16', np=dtype('float16'), nbytes=2), count=1, nregs=None), RegFragment(name='fb', role='b', shape=(16, 8, 16), dtype=DataType(name='f16', np=dtype('float16'), nbytes=2), count=1, nregs=None), RegFragment(name='fc', role='c', shape=(16, 8, 16), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), count=1, nregs=None), LdmatrixLoad(frag='fa', src_buffer='left', src_index=(Literal(value=0, dtype='int'), Literal(value=0, dtype='int')), role='a', ldm=0, swizzle='NONE', staged=False, gmem_guard=None, k_zero=None, b_trans=False, pair_frag=None, byte_slab=False, scale_buffer=None, scale_index=(), scale_ldm=0, fragment_layout='m16n8k16', fragment_index=0), LdmatrixLoad(frag='fb', src_buffer='right', src_index=(Literal(value=0, dtype='int'), Literal(value=0, dtype='int')), role='b', ldm=0, swizzle='NONE', staged=False, gmem_guard=None, k_zero=None, b_trans=False, pair_frag=None, byte_slab=False, scale_buffer=None, scale_index=(), scale_ldm=0, fragment_layout='m16n8k16', fragment_index=0), MmaSyncPtx(c_frag='fc', a_frag='fa', b_frag='fb', shape=(16, 8, 16), ab_dtype='f16', c_dtype='f32', b_row_major=False, sfa_frag=None, sfb_frag=None), RegStore(dst_buffer='result', dst_index=(Literal(value=0, dtype='int'), Literal(value=0, dtype='int')), frag='fc', shape=(16, 8, 16), ldm=0, epilogue=None, extra_frags=(), m_guard=None, n_guard=None, atomic=False, fragment_layout='m16n8k16', volta_interleaved=False, fragment_index=(0, 0), swizzle='NONE', row_dim=None, col_dim=None)), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "tensor_tile",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "left",
+        "right"
+      ],
+      "outputs": [
+        {
+          "name": "result",
+          "shape": [
+            16,
+            8
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

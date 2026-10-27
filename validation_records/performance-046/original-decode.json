@@ -1,0 +1,178 @@
+{
+ "batch": "loopcanonical_batch_046",
+ "manifest_sha256": "a03a45ad01425124d302ec2c859b142be7ba0ff1224efbaa4a5e309f8c55aae6",
+ "approval_names_manifest": true,
+ "latch_exists": true,
+ "latch_points_here": true,
+ "payload_files_match_manifest": true,
+ "payload_file_set_equal": true,
+ "planned_requests": 30,
+ "recorded_requests": 30,
+ "registers": {
+  "m01_matmul_512/baseline": {
+   "k_matmul_2967be": 40
+  },
+  "m01_matmul_512/candidate": {
+   "k_matmul_2967be": 40
+  },
+  "staged_rect/baseline": {
+   "variant_matmul_staged_rect": 40
+  },
+  "staged_rect/candidate": {
+   "variant_matmul_staged_rect": 40
+  },
+  "a_asymmetric/baseline": {
+   "k_matmul_softmax_reduce_f5921c": 40
+  },
+  "a_asymmetric/candidate": {
+   "k_matmul_softmax_reduce_f5921c": 44
+  },
+  "m_smallk/baseline": {
+   "k_matmul": 40
+  },
+  "m_smallk/candidate": {
+   "k_matmul": 40
+  },
+  "m02_matmul_rect/baseline": {
+   "k_matmul": 39
+  },
+  "m02_matmul_rect/candidate": {
+   "k_matmul": 39
+  }
+ },
+ "problems": [],
+ "values_checked": 1157456,
+ "math": {},
+ "medians_us": {
+  "m01_matmul_512": {
+   "baseline": [
+    39.584,
+    39.488
+   ],
+   "candidate": [
+    31.392,
+    31.36
+   ]
+  },
+  "staged_rect": {
+   "baseline": [
+    39.472,
+    39.456
+   ],
+   "candidate": [
+    29.248,
+    29.248
+   ]
+  },
+  "a_asymmetric": {
+   "baseline": [
+    24.128,
+    23.104
+   ],
+   "candidate": [
+    23.088,
+    23.104
+   ]
+  },
+  "m_smallk": {
+   "baseline": [
+    3.552,
+    3.456
+   ],
+   "candidate": [
+    3.44,
+    3.536
+   ]
+  },
+  "m02_matmul_rect": {
+   "baseline": [
+    4.928,
+    4.88
+   ],
+   "candidate": [
+    4.88,
+    4.928
+   ]
+  }
+ },
+ "complete_pairs": {
+  "m01_matmul_512": {
+   "variants": [
+    "baseline",
+    "candidate"
+   ],
+   "means_us": [
+    39.536,
+    31.375999999999998
+   ],
+   "baseline_time_over_candidate_time": 1.260071392146864
+  },
+  "staged_rect": {
+   "variants": [
+    "baseline",
+    "candidate"
+   ],
+   "means_us": [
+    39.464,
+    29.248
+   ],
+   "baseline_time_over_candidate_time": 1.349288840262582
+  },
+  "a_asymmetric": {
+   "variants": [
+    "baseline",
+    "candidate"
+   ],
+   "means_us": [
+    23.616,
+    23.096
+   ],
+   "baseline_time_over_candidate_time": 1.022514721163838
+  },
+  "m_smallk": {
+   "variants": [
+    "baseline",
+    "candidate"
+   ],
+   "means_us": [
+    3.504,
+    3.488
+   ],
+   "baseline_time_over_candidate_time": 1.0045871559633028
+  },
+  "m02_matmul_rect": {
+   "variants": [
+    "baseline",
+    "candidate"
+   ],
+   "means_us": [
+    4.904,
+    4.904
+   ],
+   "baseline_time_over_candidate_time": 1.0
+  }
+ },
+ "first_utc": "2026-10-24T17:58:51.437543+00:00",
+ "last_utc": "2026-10-24T18:00:20.352364+00:00",
+ "runner_summary": {
+  "state": "passed",
+  "attempts": 30,
+  "error": null
+ },
+ "exit": {
+  "returncode": 0
+ },
+ "gates": {
+  "all_values_original_tolerance": true,
+  "m01_ge_1.10": true,
+  "each_ge_0.95": {
+   "m01_matmul_512": true,
+   "staged_rect": true,
+   "a_asymmetric": true,
+   "m_smallk": true,
+   "m02_matmul_rect": true
+  },
+  "five_complete_pairs": true,
+  "all_pass": true
+ }
+}
