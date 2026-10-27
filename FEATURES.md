@@ -98,16 +98,11 @@ three tensor examples cover padded output and K=32 accumulation with small exact
 values. These results establish those inputs and launches, not all-domain
 rounding, throughput or freedom from races.
 
-Fable's encompassing review 072 of extracted archive `2c5d165` reproduced
-381 tests, 440 default and rollback outputs, and all 24 hardware PTX payloads.
-It found no implementation blocker and required correction of stale status
-text. Opus review 073 of the documentation-only successor `96c6d3a` closed
-that correction with no blocker or required correction. This release preserves
-all executable files from the reviewed candidate.
-The backend modules remain byte-identical to reviewed `34129e9`. Most of the
-429 changed corpus outputs have not run on hardware. Earlier 055/056 results
-remain historical evidence, as labeled in VALIDATION.md.
-Blake approved adoption on 2026-10-25. All hosted allowances are consumed.
+The current [offline replay](validation_records/current/README.md) verifies all
+four batches and regenerates their 24 tested PTX payloads. These checks preserve
+original tolerances and exact integer transport; they do not add hardware runs.
+The [source manifest](docs/source-provenance.json) binds the implementation to
+the adopted snapshot. Most of the 429 changed corpus outputs remain offline-only.
 
 BF16/FP8/FP4 and TMA remain unsupported. TMA needs a descriptor ABI and lifetime
 contract, not just an instruction spelling. Adding extra formats without sound

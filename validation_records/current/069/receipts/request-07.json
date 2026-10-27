@@ -1,0 +1,8 @@
+{
+  "endpoint": "/compile",
+  "request": {
+    "ptx": ".version 8.0\n.target sm_89\n.address_size 64\n\n.visible .entry typed_add(\n    .param .u64 param_0,\n    .param .u64 param_1,\n    .param .u64 param_2\n)\n{\n    .reg .u64 %rd<9>;\n    .reg .s32 %r<18>;\n    ld.param.u64 %rd0, [param_0];\n    cvta.to.global.u64 %rd0, %rd0;\n    ld.param.u64 %rd1, [param_1];\n    cvta.to.global.u64 %rd1, %rd1;\n    ld.param.u64 %rd2, [param_2];\n    cvta.to.global.u64 %rd2, %rd2;\n    mov.u32 %r0, %tid.x;\n    mov.u32 %r1, %ctaid.x;\n    mov.u32 %r2, %ntid.x;\n    mul.lo.s32 %r3, %r1, %r2;\n    add.s32 %r4, %r3, %r0;\n    and.b32 %r5, %r0, 31;\n    shr.u32 %r6, %r0, 5;\n    shr.s32 %r12, %r4, 31;\n    shr.u32 %r14, %r12, 27;\n    add.s32 %r15, %r4, %r14;\n    shr.s32 %r13, %r15, 5;\n    mul.lo.s32 %r16, %r13, 32;\n    sub.s32 %r17, %r4, %r16;\n    mov.s32 %r7, %r17;\n    mov.s32 %r8, %r7;\n    mul.wide.s32 %rd3, %r8, 4;\n    add.u64 %rd4, %rd0, %rd3;\n    ld.global.s32 %r9, [%rd4];\n    mul.wide.s32 %rd5, %r8, 4;\n    add.u64 %rd6, %rd1, %rd5;\n    ld.global.s32 %r10, [%rd6];\n    add.s32 %r11, %r9, %r10;\n    mul.wide.s32 %rd7, %r8, 4;\n    add.u64 %rd8, %rd2, %rd7;\n    st.global.s32 [%rd8], %r11;\n    L1:\n    ret;\n}\n"
+  },
+  "status_code": 200,
+  "response_text": "{\"ok\":true,\"cubin_id\":\"551b69f73a96f7b8f56f447e7700ae54ca0c4f34fa0a8a03705c59c4f1e3732f\",\"bytes\":5496,\"arch\":\"sm_120\",\"flags\":[],\"entry_points\":[\"typed_add\"],\"registers\":{\"typed_add\":12}}"
+}

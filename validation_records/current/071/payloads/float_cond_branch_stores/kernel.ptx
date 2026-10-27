@@ -1,0 +1,67 @@
+.version 8.0
+.target sm_89
+.address_size 64
+
+.visible .entry variant_float_cond_branch_stores(
+    .param .u64 param_0,
+    .param .u64 param_1,
+    .param .u64 param_2
+)
+{
+    .reg .u64 %rd<11>;
+    .reg .s32 %r<16>;
+    .reg .pred %p<3>;
+    .reg .f32 %f<5>;
+    ld.param.u64 %rd0, [param_0];
+    cvta.to.global.u64 %rd0, %rd0;
+    ld.param.u64 %rd1, [param_1];
+    cvta.to.global.u64 %rd1, %rd1;
+    ld.param.u64 %rd2, [param_2];
+    cvta.to.global.u64 %rd2, %rd2;
+    mov.u32 %r0, %tid.x;
+    mov.u32 %r1, %ctaid.x;
+    mov.u32 %r2, %ntid.x;
+    mul.lo.s32 %r3, %r1, %r2;
+    add.s32 %r4, %r3, %r0;
+    and.b32 %r5, %r0, 31;
+    shr.u32 %r6, %r0, 5;
+    setp.ge.s32 %p0, %r4, 257;
+    @%p0 bra L1;
+    shr.s32 %r9, %r4, 31;
+    xor.b32 %r11, %r4, %r9;
+    sub.u32 %r11, %r11, %r9;
+    mul.hi.u32 %r10, %r11, 16711936;
+    mul.lo.u32 %r12, %r10, 257;
+    setp.gt.u32 %p2, %r12, %r11;
+    selp.u32 %r13, 1, 0, %p2;
+    sub.u32 %r10, %r10, %r13;
+    xor.b32 %r10, %r10, %r9;
+    sub.s32 %r10, %r10, %r9;
+    mul.lo.s32 %r14, %r10, 257;
+    sub.s32 %r15, %r4, %r14;
+    mov.s32 %r7, %r15;
+    mov.s32 %r8, %r7;
+    mul.wide.s32 %rd3, %r8, 4;
+    add.u64 %rd4, %rd0, %rd3;
+    ld.global.f32 %f0, [%rd4];
+    mul.wide.s32 %rd5, %r8, 4;
+    add.u64 %rd6, %rd1, %rd5;
+    ld.global.f32 %f1, [%rd6];
+    setp.lt.f32 %p1, %f0, %f1;
+    @!%p1 bra L2;
+    add.rn.f32 %f2, %f0, %f1;
+    mov.f32 %f3, %f2;
+    mul.wide.s32 %rd7, %r8, 4;
+    add.u64 %rd8, %rd2, %rd7;
+    st.global.f32 [%rd8], %f3;
+    bra L3;
+    L2:
+    sub.rn.f32 %f4, %f0, %f1;
+    mov.f32 %f3, %f4;
+    mul.wide.s32 %rd9, %r8, 4;
+    add.u64 %rd10, %rd2, %rd9;
+    st.global.f32 [%rd10], %f3;
+    L3:
+    L1:
+    ret;
+}

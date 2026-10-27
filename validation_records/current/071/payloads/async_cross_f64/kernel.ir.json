@@ -1,0 +1,63 @@
+{
+  "inputs": [
+    "x0",
+    "x1"
+  ],
+  "outputs": [
+    "add"
+  ],
+  "nodes": {
+    "x0": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x0",
+          "shape": [
+            4118
+          ],
+          "dtype": "f64"
+        }
+      ]
+    },
+    "x1": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x1",
+          "shape": [
+            4118
+          ],
+          "dtype": "f64"
+        }
+      ]
+    },
+    "add": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='a0', extent=Dim(128), window=None),), body=(Smem(name='scratch', extents=(8192,), dtype='f64', align=0), Cond(cond=BinaryExpr(op='<', left=Var(name='a0'), right=Literal(value=127, dtype='int')), body=(CpAsyncCopy(smem='scratch', smem_index=(BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')),), src='x0', src_index=(BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')),), nbytes=16, swizzle='B128', lane_index=None, lane_rows=0), CpAsyncCommit(), CpAsyncWait(group=0)), else_body=()), Sync(barrier_id=0, count=None, warp=False), Cond(cond=BinaryExpr(op='<', left=Var(name='a0'), right=Literal(value=127, dtype='int')), body=(Load(names=('read0',), input='scratch', index=(BinaryExpr(op='^', left=BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')), right=BinaryExpr(op='<<', left=BinaryExpr(op='&', left=BinaryExpr(op='>>', left=BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')), right=Literal(value=6, dtype='int')), right=Literal(value=7, dtype='int')), right=Literal(value=3, dtype='int'))),), dtype=DataType(name='f64', np=dtype('float64'), nbytes=8)), Write(output='add', index=(BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')),), values=('read0',), value_dtype=DataType(name='f64', np=dtype('float64'), nbytes=8), atomic=False, swizzle='NONE'), Load(names=('read1',), input='scratch', index=(BinaryExpr(op='+', left=BinaryExpr(op='^', left=BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')), right=BinaryExpr(op='<<', left=BinaryExpr(op='&', left=BinaryExpr(op='>>', left=BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')), right=Literal(value=6, dtype='int')), right=Literal(value=7, dtype='int')), right=Literal(value=3, dtype='int'))), right=Literal(value=1, dtype='int')),), dtype=DataType(name='f64', np=dtype('float64'), nbytes=8)), Write(output='add', index=(BinaryExpr(op='+', left=BinaryExpr(op='+', left=BinaryExpr(op='*', left=Var(name='a0'), right=Literal(value=32, dtype='int')), right=Literal(value=7, dtype='int')), right=Literal(value=1, dtype='int')),), values=('read1',), value_dtype=DataType(name='f64', np=dtype('float64'), nbytes=8), atomic=False, swizzle='NONE')), else_body=())), block_threads=128, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_add_pointwise",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x0",
+        "x1"
+      ],
+      "outputs": [
+        {
+          "name": "add",
+          "shape": [
+            4118
+          ],
+          "dtype": "f64"
+        }
+      ]
+    }
+  }
+}

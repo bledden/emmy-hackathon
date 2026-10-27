@@ -1,36 +1,42 @@
-# Saved evidence, replayed offline
+# Inspect the evidence offline
 
-These folders contain recorded data, not a GPU runner. The compiler does not
-read them when translating IR. Install the root requirements first, then run:
+## Current implementation: start here
+
+```sh
+python validation_records/current/check.py
+```
+
+The [current packet](current/README.md) contains **all 82 saved responses** from
+064/068/069/071, their original payload artifacts and references. The checker
+recomputes timings and output comparisons, checks preserved source hashes, and
+regenerates all **24 tested PTX files** through the current CLI. It does not send
+requests or execute GPU code. Both i64 examples use exact paired-i32 decoding.
+
+The current packet supports the headline 2.020× main-matmul comparison and the
+15-corpus-plus-nine-examples hardware statement. It does not establish coverage
+of all 440 offline inputs, hidden sets, race freedom or general FP16 rounding.
+
+## Historical packets
+
+These remain byte-for-byte unchanged. They describe earlier backend versions,
+not additional measurements of the current default:
 
 ```sh
 python validation_records/performance-046/check.py
 python validation_records/qualification-055/check.py
 ```
 
-- [Performance 046](performance-046/README.txt): all five comparison pairs,
-  including the flat control, original payloads and all 30 saved responses.
-  This compares two earlier scalar-backend versions, not tensor cores or nvcc.
-- [Qualification 055](qualification-055/README.txt): all 19 correctness witnesses
-  and 38 saved responses, including three tensor examples and the copy/sync
-  cases that completed qualification. One iteration each; these are not benchmark results.
+- [046](performance-046/README.txt): five earlier timing pairs and 30 responses.
+- [055](qualification-055/README.txt): 19 earlier witnesses and 38 responses.
 
-Both commands are local replays and perform zero network requests. The newly
-packaged checkers are Codex-authored; each agrees with a separately authored,
-unchanged Opus result. Fable's encompassing review 056 of extracted archive
-`4ea1fd6` completed on 2026-10-24 with no blocker or required correction. Fable
-read both checker programs, exercised 76 re-sealed mutations, and reproduced
-349 tests, 431 outputs and all three portable commands offline. Those figures
-describe the earlier archive, not the current default backend.
-Replaying these packets adds no hardware evidence and is not another
-independently authored decoder.
-Hashes bind the recorded bytes; the organizer did not sign these records.
+Their inner READMEs and manifests are sealed historical records. References to
+pending reviews or absent absolute paths describe their preparation snapshots;
+those paths are not required to replay them. See [history](../docs/history/README.md).
 
-Both packets are preserved byte-for-byte from their preparation snapshots.
-Their inner READMEs are covered by the unchanged packet-manifest.json hashes.
-Statements there that review or later qualification is pending describe those
-historical snapshots: qualification 055 and review 056 are now complete.
-Current status is in the root VALIDATION.md. Blake adopted the compact backend
-after Fable 072 and Opus 073 on 2026-10-25. These preserved packets still describe
-earlier versions. Historical absolute paths inside original manifests need not
-exist to replay saved data.
+## What a replay proves
+
+It checks the internal consistency and preserved bytes of supplied artifacts and
+recomputes results from saved service responses. It is **not a new GPU run** or
+an organizer-signed attestation. The compiler never reads these references or
+responses during translation. See [provenance](../docs/PROVENANCE.md) for the AI
+roles, internal commit identities and the new checker's review boundary.

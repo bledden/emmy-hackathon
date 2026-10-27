@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "batches": [
+    {
+      "id": "064",
+      "mode": "timing",
+      "cases": 5,
+      "requests": 36,
+      "current_variant": "compact"
+    },
+    {
+      "id": "068",
+      "mode": "timing",
+      "cases": 2,
+      "requests": 12,
+      "current_variant": "compact"
+    },
+    {
+      "id": "069",
+      "mode": "exact",
+      "cases": 9,
+      "requests": 18,
+      "current_variant": "current"
+    },
+    {
+      "id": "071",
+      "mode": "exact",
+      "cases": 8,
+      "requests": 16,
+      "current_variant": "current"
+    }
+  ],
+  "hardware_kernels": 24,
+  "requests": 82,
+  "claims": "15 corpus fixtures plus nine examples; 24 distinct case names. No hidden coverage or race-freedom guarantee."
+}

@@ -1,0 +1,64 @@
+.version 8.0
+.target sm_89
+.address_size 64
+
+.visible .entry async_copy(
+    .param .u64 param_0,
+    .param .u64 param_1
+)
+{
+    .reg .u64 %rd<17>;
+    .reg .s32 %r<22>;
+    .reg .f32 %f<4>;
+    .shared .align 16 .b8 sm_stage[512];
+    ld.param.u64 %rd0, [param_0];
+    cvta.to.global.u64 %rd0, %rd0;
+    ld.param.u64 %rd1, [param_1];
+    cvta.to.global.u64 %rd1, %rd1;
+    mov.u32 %r0, %tid.x;
+    mov.u32 %r1, %ctaid.x;
+    mov.u32 %r2, %ntid.x;
+    mul.lo.s32 %r3, %r1, %r2;
+    add.s32 %r4, %r3, %r0;
+    and.b32 %r5, %r0, 31;
+    shr.u32 %r6, %r0, 5;
+    shr.s32 %r16, %r4, 31;
+    shr.u32 %r18, %r16, 27;
+    add.s32 %r19, %r4, %r18;
+    shr.s32 %r17, %r19, 5;
+    mul.lo.s32 %r20, %r17, 32;
+    sub.s32 %r21, %r4, %r20;
+    mov.s32 %r7, %r21;
+    mov.s32 %r8, %r7;
+    mov.u64 %rd2, sm_stage;
+    mul.lo.s32 %r9, %r8, 4;
+    mul.wide.s32 %rd3, %r9, 4;
+    add.u64 %rd4, %rd2, %rd3;
+    mul.lo.s32 %r10, %r8, 4;
+    mul.wide.s32 %rd5, %r10, 4;
+    add.u64 %rd6, %rd2, %rd5;
+    add.u64 %rd7, %rd6, 0;
+    mul.lo.s32 %r11, %r8, 4;
+    mul.wide.s32 %rd8, %r11, 4;
+    add.u64 %rd9, %rd0, %rd8;
+    cvt.u32.u64 %r12, %rd7;
+    cp.async.cg.shared.global [%r12], [%rd9], 16;
+    cp.async.commit_group;
+    cp.async.wait_group 0;
+    bar.sync 0;
+    mul.lo.s32 %r13, %r8, 4;
+    mul.wide.s32 %rd10, %r13, 4;
+    add.u64 %rd11, %rd2, %rd10;
+    mul.lo.s32 %r14, %r8, 4;
+    mul.wide.s32 %rd12, %r14, 4;
+    add.u64 %rd13, %rd2, %rd12;
+    add.u64 %rd14, %rd13, 0;
+    ld.shared.v4.f32 {%f0, %f1, %f2, %f3}, [%rd14];
+    mul.lo.s32 %r15, %r8, 4;
+    mul.wide.s32 %rd15, %r15, 4;
+    add.u64 %rd16, %rd1, %rd15;
+    st.global.v4.f32 [%rd16], {%f0, %f1, %f2, %f3};
+    cp.async.wait_all;
+    L1:
+    ret;
+}

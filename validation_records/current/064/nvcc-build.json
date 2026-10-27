@@ -1,0 +1,11 @@
+{
+  "compiler": "nvcc 12.9.86 (CUDA 12.9.1 distribution)",
+  "command": "nvcc --ptx --gpu-architecture=compute_89 -O3 --fmad=true reference.cu -o nvcc.ptx",
+  "fast_math": false,
+  "comparison": "Organizers CUDA under the supplied schedule, inputs and launch; not cuBLAS.",
+  "reference_cu_sha256": "17f61d2c8732ae3dd5660f3b9b7be33939ec83b3356cecf210b7a0c45fc008c4",
+  "nvcc_ptx_sha256": "aa6244641538f065eeaa6531301f011b7c1a72bf012a639429c8407e489ff8c3",
+  "build_reproduced_at_packaging": false,
+  "cuda_source": "https://github.com/cloudrift-ai/emmy-hackathon-2026/blob/ec8cde1943f88efea3827a95bda6085553d2d407/problems/m01_matmul_512/k_matmul_2967be.ref.cu",
+  "cuda_source_role": "Organizer-authored reference for the external nvcc comparison only; not used by our compiler."
+}

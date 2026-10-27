@@ -15,6 +15,24 @@ The tensor path requires explicit fragment statements: none of the 15 public
 problem IRs or 431 prior corpus inputs uses them. The existing FP32 matmuls
 remain scalar FP32; upstream generation of this supported form is unestablished.
 
+## Quickstart
+
+Use Python 3.12 or newer in an isolated environment:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python compile.py examples/add_f32/typed_add.ir.json > out.ptx
+```
+
+For evaluator inputs, use `python compile.py path/to/kernel.ir.json > out.ptx`.
+The IR directory must contain `meta.json`. The compiler selects its entry by
+KernelOp name and follows `arg_order`. Missing, ambiguous or inconsistent
+metadata produces an error on stderr and a nonzero exit. Successful stdout is
+ASCII PTX 8.0 targeting `sm_89`; the hosted service compiled the qualified
+artifacts for `sm_120`. Compilation requires no GPU, Torch or CUDA installation.
+
 ## From scheduled IR to GPU execution
 
 ![Compilation pipeline: scheduled IR and metadata enter the Python backend; emitted PTX is assembled and executed separately.](docs/diagrams/compilation-pipeline.svg)
@@ -24,24 +42,20 @@ It retains Emmy's supplied schedule rather than choosing a new tiling. Assembly
 and GPU execution happen outside `compile.py`. Unsupported or unproved forms
 raise a compile error instead of producing successful PTX output.
 
-## Try it offline
-
-After installing the pinned dependencies:
+## Check the examples and recorded results
 
 ```sh
 python tools/check_examples.py
-python validation_records/performance-046/check.py
-python validation_records/qualification-055/check.py
+python validation_records/current/check.py
 ```
 
-The first compiles nine examples and labels each reference/model check.
-The next two replay complete saved experiments without sending requests.
-See [the evidence guide](validation_records/README.md) for their different scope.
-The compiler reads neither reference answers nor these recorded results.
-Fable review 072 of `2c5d165` found no implementation blocker. Opus review 073
-of `96c6d3a` closed its documentation correction with no remaining blocker or
-required correction. Blake approved adoption on 2026-10-25. This release changes
-only documentation from `96c6d3a`; executable files remain identical to `2c5d165`.
+The first compiles all nine shipped examples and labels its limited model/reference
+checks. The second verifies the saved records for batches **064, 068, 069 and 071**,
+recalculates every output comparison and timing mean, and regenerates the **24
+hardware-tested PTX files** with this checkout's CLI defaults. Both run offline
+and send zero GPU requests. Replaying saved records is not a new hardware test.
+See the [evidence guide](validation_records/README.md) for data and limitations.
+The compiler never reads reference answers or recorded results while translating IR.
 
 ## Where to start reading
 
@@ -74,50 +88,25 @@ The emitter is the single owner of mutable compilation state. The other modules
 use ordinary function calls; there is no plugin registry, generated dispatch,
 or inheritance framework to follow. See the design for a short walkthrough.
 
-## Run
-
-Use Python 3.12 or newer in an isolated environment:
-
-```sh
-python -m pip install -r requirements.txt
-python compile.py path/to/kernel.ir.json > out.ptx
-```
-
-The IR directory must contain `meta.json`. The compiler selects its entry by
-KernelOp name and follows `arg_order`. Missing, ambiguous or inconsistent
-metadata produces an error on stderr and a nonzero exit. Successful stdout is
-ASCII PTX 8.0 targeting `sm_89`; the hosted service compiled the qualified
-artifacts for `sm_120`. Compilation requires no GPU, Torch or CUDA installation.
-
 ## Current evidence
 
-The implementation reviewed in `2c5d165` enables the compact CLI defaults.
-Its 28 backend modules match reviewed source `34129e9`; the CLI defaults,
-helper policies and tests changed separately. This documentation-only successor
-preserves every non-document file from `2c5d165`.
-
-| Check | Result | Scope |
+| Check | Result | What you can inspect |
 |---|---|---|
-| Regression suite | 381 passing tests | macOS and fresh Linux ARM64/x86-64 installs |
-| Default and rollback identity | 440 inputs each (431 corpus plus nine examples) | Offline PTX identity; rollback reproduces the preceding CLI backend |
-| Linux portability | 381 tests, 440 default hashes and three portable commands on each | Recorded on `03707bd`; executable files unchanged here |
-| Hosted batches 064/068/069/071 | 15 corpus kernels plus all nine examples pass | The current default reproduces all 24 hardware PTX payloads byte for byte |
-| Performance comparisons 064/068 | Seven corpus cases, including flat controls | Same-batch comparisons on the shared service; see VALIDATION.md |
+| Hosted correctness | 15 corpus kernels + all nine examples pass | [Current packet](validation_records/current/README.md): all 82 saved compile/run responses, IR, launch/input descriptors, references and tested PTX |
+| Matmul performance | 31.272 → 15.480 µs, **2.020×** vs our preceding backend | Batch 064: two request medians per variant; matched nvcc mean 15.032 µs |
+| Regression suite | 381 passing tests | `tests/`; rerun with the organizer checkout as described below |
+| Recorded output identity | 440 inputs (431 corpus + nine examples) | Recorded offline checks, not 440 GPU tests; the current packet regenerates the 24 tested kernels |
+| Recorded Linux portability | 381 tests + 440 default hashes on ARM64 and x86-64 | Recorded before publication; implementation unchanged; [provenance](docs/PROVENANCE.md) |
 
-Fable independently reproduced 381 tests and the 440-output default/rollback
-checks from the extracted `2c5d165` archive. All nine shipped examples ran in
-batch 069. Most of the 429 changed corpus outputs have only offline assembly
-and model evidence; 440 output checks do not mean 440 GPU tests.
+All nine examples ran on hardware, including five scalar types, an async copy and
+three explicit tensor-fragment examples. Tensor inputs are small exact values;
+these demonstrate lane mapping and accumulation, not general FP16 accuracy or
+tensor-core throughput. One-run copy and synchronization tests do not prove race
+freedom. Most of the 429 changed corpus outputs have only offline evidence.
 
-The tensor checks cover small exact-integer FP16 inputs, not general FP16
-accuracy or throughput. Single copy/sync runs do not prove race freedom.
-Single-iteration qualification times are not benchmarks. The historical
-all-zero sync witness cannot distinguish stores from no stores on zero-initialized
-output; its stores were checked separately in a CPU model.
-The bundled 046/055 replay packets describe earlier sources, not additional
-hardware qualification of the current default. See [VALIDATION.md](VALIDATION.md)
-for failed trials, numerical limits, current results and historical reviews.
-No hidden-set or ranking claim is made.
+Timing results come from a shared service without clock control. They compare the
+supplied schedule, not cuBLAS, and do not establish statistical confidence. See
+[VALIDATION.md](VALIDATION.md) for each batch, flat controls and numerical limits.
 
 ## Optimizations and numerical policy
 
@@ -127,7 +116,7 @@ unrolls only eligible annotated bounded loops, and combines aligned shared loads
 when address and dependency proofs permit. It keeps the supplied schedule and
 each accumulator's floating-point order. The Python API remains opt-in.
 
-The emitter itself is byte-identical to experimental source `34129e9`. Across
+Across
 batches 064/068/069/071, 15 corpus fixtures and all nine shipped examples have
 passing hardware results on the hosted sm_120 service. This is a sampled set,
 not GPU coverage of all 429 changed corpus outputs. The backend's default output
@@ -178,7 +167,7 @@ optional contraction pass. These policies must be disclosed in the submission.
 | `EMMY_PTX_SHARED_LOADS` | `compact` | `off`, `address`, `vector`: disable or limit shared-load transformations |
 | `EMMY_PTX_SHORT_TREE` | `0` | `1`: experimental eligible shared trees lowered through warp shuffles |
 
-Set all three new settings to `0`, `0`, and `off` to reproduce the preceding
+Set the constant-division, unroll, and shared-load settings to `0`, `0`, and `off` to reproduce the preceding
 CLI backend; FMA and reuse keep their existing independent settings.
 
 Python `compile_file` defaults keep contraction, index reuse, constant-division
@@ -267,3 +256,16 @@ locally by default and sends **zero requests**. Explicit `--execute` sends at mo
 iterations). Busy responses, transport errors and incorrect outputs stop the
 batch without retries; redirects are disabled. This helper is separate from the
 reviewed typed qualification batches, and is not a reason to repeat those runs.
+
+## Development and provenance
+
+Blake directed the work and performance questions. Codex implemented the backend
+and experiments; Opus produced separate counterexample probes and receipt checks;
+Fable reviewed release candidates. These are AI-assisted development roles, not
+external certification. The submission video explains the implementation in
+Blake's own voice.
+
+This repository starts from a clean snapshot of the adopted implementation.
+[Provenance and file hashes](docs/PROVENANCE.md) connect that snapshot to the tested
+source without requiring private development history. The [historical notes](docs/history/README.md)
+retain failed experiments and earlier review chronology behind the current results.

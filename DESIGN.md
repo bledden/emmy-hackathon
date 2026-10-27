@@ -1,5 +1,9 @@
 # How the compiler works
 
+For current measured results and source identity, see [VALIDATION.md](VALIDATION.md)
+and [provenance](docs/PROVENANCE.md). Numbered reviews and earlier commit IDs below
+are historical development references, not external certifications or prerequisites.
+
 This project implements the hackathon's Kernel IR → PTX translation in Python.
 Emmy 0.3.11 loads the typed IR through `Graph.from_dict`; it does not render or
 compile the output. The entry point is `python compile.py <kernel>.ir.json`.
